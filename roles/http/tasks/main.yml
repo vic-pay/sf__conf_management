@@ -1,0 +1,30 @@
+---
+- name: make conf dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - /etc/nginx/conf.d/
+    - /etc/nginx/code/
+
+- name: copy conf
+  template:
+    src:   "templates/php.conf"
+    dest:  "/etc/nginx/conf.d/php.conf"
+
+- name: copy index.php
+  template:
+    src:   "templates/index.php"
+    dest:  "/etc/nginx/code/index.php"
+
+- name: run nginx container
+  docker_container:
+    name:    "http"
+    image:   "nginx:latest"
+    volumes:
+      - /etc/nginx/conf.d/php.conf:/etc/nginx/conf.d/default.conf
+      - /etc/nginx/code/:/code
+    ports:
+      - "80:80"
+    recreate: yes

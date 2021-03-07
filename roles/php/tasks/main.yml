@@ -1,0 +1,24 @@
+---
+- name: make conf dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - /etc/php/code/
+
+- name: copy index.php
+  template:
+    src:   "templates/index.php"
+    dest:  "/etc/php/code/index.php"
+
+- name: run php-fpm container
+  docker_container:
+    name:    "php"
+    image:   "php:8.0-fpm"
+    command: "php-fpm"
+    volumes:
+      - /etc/php/code/:/code
+    ports:
+      - "9000:9000"
+    recreate: yes

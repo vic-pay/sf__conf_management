@@ -1,0 +1,18 @@
+---
+all:
+  children:
+    lxd_servers:
+      hosts:
+        localhost:
+          ansible_connection: local
+
+    lxd_containers:
+      hosts:
+        conf-management-1:
+          ansible_connection: lxd
+          ansible_host: conf-management-1
+          ip_address: 10.0.3.140
+        conf-management-2:
+          ansible_connection: lxd
+          ansible_host: conf-management-2
+          ip_address: 10.0.3.150
